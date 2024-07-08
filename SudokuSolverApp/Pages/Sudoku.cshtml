@@ -1,0 +1,96 @@
+﻿@page
+@model SudokuSolverApp.Pages.SudokuModel
+@{
+    ViewData["Title"] = "Sudoku Solver";
+}
+
+<h2>Sudoku Solver</h2>
+
+<style>
+    .region-1 {
+        background-color: #ffcccc;
+    }
+    /* Light red */
+    .region-2 {
+        background-color: #ccffcc;
+    }
+    /* Light green */
+    .region-3 {
+        background-color: #ccccff;
+    }
+    /* Light blue */
+    .region-4 {
+        background-color: #ffffcc;
+    }
+    /* Light yellow */
+    .region-5 {
+        background-color: #ccffff;
+    }
+    /* Light cyan */
+    .region-6 {
+        background-color: #ffccff;
+    }
+    /* Light magenta */
+    .region-7 {
+        background-color: #d9d9d9;
+    }
+    /* Light gray */
+    .region-8 {
+        background-color: #ffebcc;
+    }
+    /* Light orange */
+    .region-9 {
+        background-color: #e6ccff;
+    }
+    /* Light purple */
+    input {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .sudoku-grid {
+        display: grid;
+        grid-template-columns: repeat(9, 30px);
+        gap: 1px;
+    }
+</style>
+
+<form method="post">
+    <div class="sudoku-grid">
+        @for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                <input type="text" name="InputBoard[@i][@j]" value="@Model.InputBoard[i][j]"
+                       class="@(Model.GetRegionClass(i, j))" maxlength="1" />
+            }
+        }
+    </div>
+    <br />
+    <button type="submit">Solve</button>
+</form>
+
+@if (Model.Solved)
+{
+    <h3>Solved Sudoku:</h3>
+    <div class="sudoku-grid">
+        @for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                <span class="@(Model.GetRegionClass(i, j))">@Model.Board[i, j] </span>
+            }
+        }
+    </div>
+}
+else if (!ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
